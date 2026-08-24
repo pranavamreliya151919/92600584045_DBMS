@@ -1,0 +1,112 @@
+1) Using Mode() Find Odd/Even Number
+
+set SERVEROUTPUT on;
+
+DECLARE
+	n1 number := &n1;
+BEGIN
+	IF MOD(n1,2)=0 THEN
+	DBMS_OUTPUT.PUT_LINE('EVEN');
+	ELSE
+	DBMS_OUTPUT.PUT_LINE('ODD');
+	END IF;
+END;
+/
+
+=============================================================================================================================
+
+2) Write A Programme to Check Prime Number
+
+set SERVEROUTPUT on;
+
+DECLARE
+	n1 number:= &n1;
+	prime NUMBER :=1;
+BEGIN
+	IF n1<=1 then
+		prime:=0;
+	ELSE
+		for i in 2..n1/2 loop					
+			if mod(n1,i)=0 then				
+				prime:=0;
+				exit;
+			end if;
+		end loop;
+	end if;
+if prime!=0 then
+	dbms_output.put_line('Prime');
+else
+	dbms_output.put_line('Not Prime');	
+end if;
+
+END;
+/
+
+=============================================================================================================================
+
+3) Write a PL/SQL block to calculate the total, percentage and grade of student based on his/her Rollno from RESULT table. (Create RESULT table 
+     with Rollno, Name, Sub1, Sub2, Sub3, Sub4, Sub5, Total, Per, Grade attributes with appropriate data type).
+
+CREATE TABLE RESULT(
+	roll_no number(5) Primary key,
+	name varchar(50),
+	sub1 number(3) CHECK (sub1 between 0 and 100),
+	sub2 number(3) CHECK (sub2 between 0 and 100),
+	sub3 number(3) CHECK (sub3 between 0 and 100),
+	sub4 number(3) CHECK (sub4 between 0 and 100),
+	sub5 number(3) CHECK (sub5 between 0 and 100),
+	total number(3),
+	per real,
+	grade varchar(2)
+);
+
+SET SERVEROUTPUT ON;
+DECLARE
+	roll_no RESULT.roll_no%TYPE;
+	name RESULT.name%TYPE;
+	sub1 RESULT.sub1%TYPE;
+	sub2 RESULT.sub2%TYPE;
+	sub3 RESULT.sub3%TYPE;
+	sub4 RESULT.sub4%TYPE;
+	sub5 RESULT.sub5%TYPE;
+	total RESULT.total%TYPE;
+	per RESULT.per%TYPE;
+	grade RESULT.grade%TYPE;
+BEGIN
+	roll_no:=&roll_no;
+	SELECT name, sub1, sub2, sub3, sub4, sub5 INTO name, sub1, sub2, sub3, sub4, sub5 FROM RESULT WHERE roll_no=roll_no;
+
+	total:=sub1+sub2+sub3+sub4+sub5;
+	per:=total/5;
+	
+	if sub1<35 OR sub2<35 OR sub3<35 OR sub4<35 OR sub5<35 then
+		grade:='F';
+		dbms_output.put_line('Your Are Fail');
+	else
+		if per>=90 then
+			grade:='A+';
+		elsif per>=80 and per<90 then
+			grade:='A';
+		elsif per>=70 and per<80 then
+			grade:='B';
+		elsif per>=60 and per<70 then
+			grade:='C';
+		elsif per>=35 and per<60 then
+			grade:='D';
+		else
+			grade:='F';
+		end if;
+
+		dbms_output.put_line('Result : Pass');
+	end if;
+
+dbms_output.put_line('===================================');
+dbms_output.put_line('Roll No	: ' || roll_no);
+dbms_output.put_line('Student Name 	: ' || name);
+dbms_output.put_line('Total		: ' || total);
+dbms_output.put_line('Percentage	: ' || per);
+dbms_output.put_line('Grade		: ' || grade);
+dbms_output.put_line('===================================');
+
+END;
+/

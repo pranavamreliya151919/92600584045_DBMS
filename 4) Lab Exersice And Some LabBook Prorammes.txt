@@ -1,0 +1,367 @@
+========== Assignmet Of DBMS ==========
+1) Write a PL/SQL block that find
+	1 . Area Of Circle
+	2 . Area Of Rectangle
+	3. Circumference of Circle
+
+------------------------------CODE---------------------------------------
+SET SERVEROUTPUT ON;
+DECLARE
+	r1 number(3):=&r;
+	l1 number(3):=&l;
+	w1 number(3):=&w;
+	area_circle number(10);
+	area_rectangle number(10);
+	circumference_circle number(10);
+
+BEGIN
+	area_circle:=3.14159*r1*r1;
+	area_rectangle:=l1*w1;
+	circumference_circle:=2*3.14159*r1;
+
+	DBMS_OUTPUT.PUT_LINE('RADIOUS :' ||r1);
+	DBMS_OUTPUT.PUT_LINE('Area Of Circle :' ||area_circle);
+	DBMS_OUTPUT.PUT_LINE('Length Of Rectangle :' ||l1);
+	DBMS_OUTPUT.PUT_LINE('Width Of Rectangle :' ||w1);
+	DBMS_OUTPUT.PUT_LINE('Area of Rectangle :' ||area_rectangle);
+	DBMS_OUTPUT.PUT_LINE('Circumference :' ||circumference_circle);
+END;
+/
+
+=============================================================================================================================
+
+2) Write a PL/SQL block to accept product name, qty and price from user and then calculate discount in Rs. based on the given (%).
+------------------------------CODE---------------------------------------
+
+SET SERVEROUTPUT ON;
+DECLARE
+	p_name varchar(50):=&p_name;
+	qty number:=&qty;
+	price number:=&price;
+	disc number:=20;
+	f_price real;
+BEGIN
+	f_price:=price*qty*disc/100;
+	dbms_output.put_line('Your Discount :'|| f_price);
+END;
+/
+
+============================================================================================================================
+
+3) Write a PL/SQL block to calculate the total, percentage and grade of student based on his/her Rollno from RESULT table. (Create RESULT table 
+     with Rollno, Name, Sub1, Sub2, Sub3, Sub4, Sub5, Total, Per, Grade attributes with appropriate data type).
+------------------------------CODE---------------------------------------
+
+CREATE TABLE RESULT(
+	roll_no number(5) Primary key,
+	name varchar(50),
+	sub1 number(3) CHECK (sub1 between 0 and 100),
+	sub2 number(3) CHECK (sub2 between 0 and 100),
+	sub3 number(3) CHECK (sub3 between 0 and 100),
+	sub4 number(3) CHECK (sub4 between 0 and 100),
+	sub5 number(3) CHECK (sub5 between 0 and 100),
+	total number(3),
+	per real,
+	grade varchar(2)
+);
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+    	v_roll_no RESULT.roll_no%TYPE;
+    	v_name RESULT.name%TYPE;
+    	v_sub1 RESULT.sub1%TYPE;
+    	v_sub2 RESULT.sub2%TYPE;
+    	v_sub3 RESULT.sub3%TYPE;
+    	v_sub4 RESULT.sub4%TYPE;
+    	v_sub5 RESULT.sub5%TYPE;
+    	v_total RESULT.total%TYPE;
+    	v_per RESULT.per%TYPE;
+    	v_grade RESULT.grade%TYPE;
+
+BEGIN
+    	v_roll_no := &roll_no;
+
+    	SELECT name, sub1, sub2, sub3, sub4, sub5
+    	INTO v_name, v_sub1, v_sub2, v_sub3, v_sub4, v_sub5
+    	FROM RESULT
+    	WHERE roll_no = v_roll_no;
+
+
+    	v_total := v_sub1 + v_sub2 + v_sub3 + v_sub4 + v_sub5;
+    	v_per := v_total / 5;
+
+    	IF v_sub1 < 35 OR v_sub2 < 35 OR v_sub3 < 35 OR
+      		v_sub4 < 35 OR v_sub5 < 35 THEN
+        		v_grade := 'F';
+    	ELSIF v_per >= 90 THEN
+        		v_grade := 'A+';
+   	ELSIF v_per >= 80 THEN
+        		v_grade := 'A';
+
+    	ELSIF v_per >= 70 THEN
+       		v_grade := 'B';
+    	ELSIF v_per >= 60 THEN
+ 		v_grade := 'C';
+    	ELSIF v_per >= 35 THEN
+        		v_grade := 'D';
+    	ELSE
+        		v_grade := 'F';
+    	END IF;
+
+    	UPDATE RESULT
+    	SET total = v_total,
+        	per = v_per,
+        	grade = v_grade
+    	WHERE roll_no = v_roll_no;
+
+COMMIT;
+    	DBMS_OUTPUT.PUT_LINE('===================================');
+
+    	DBMS_OUTPUT.PUT_LINE('Roll No        : ' || v_roll_no);
+    	DBMS_OUTPUT.PUT_LINE('Student Name   : ' || v_name);
+    	DBMS_OUTPUT.PUT_LINE('Subject 1      : ' || v_sub1);
+    	DBMS_OUTPUT.PUT_LINE('Subject 2      : ' || v_sub2);
+   	DBMS_OUTPUT.PUT_LINE('Subject 3      : ' || v_sub3);
+   	DBMS_OUTPUT.PUT_LINE('Subject 4      : ' || v_sub4);
+    	DBMS_OUTPUT.PUT_LINE('Subject 5      : ' || v_sub5);
+
+DBMS_OUTPUT.PUT_LINE('-----------------------------------');
+
+    	DBMS_OUTPUT.PUT_LINE('Total          : ' || v_total);
+    	DBMS_OUTPUT.PUT_LINE('Percentage     : ' || ROUND(v_per,2));
+    	DBMS_OUTPUT.PUT_LINE('Grade          : ' || v_grade);
+
+    	IF v_grade = 'F' THEN
+        		DBMS_OUTPUT.PUT_LINE('Result         : FAIL');
+   	ELSE
+        		DBMS_OUTPUT.PUT_LINE('Result         : PASS');
+    	END IF;
+
+    		DBMS_OUTPUT.PUT_LINE('===================================');
+
+END;
+/
+
+============================================================================================================================
+
+4) 
+	1. Write a program that prints value 1 to 100 numbers using FOR LOOP.
+	2. Write a program that prints value 1 to 100 number using LOOP Command.
+	3. Write a program that prints value 1 to 100 number using WHILE LOOP Command
+
+------------------------------------------------------------------------------------------------
+#FOR LOOP
+
+SET SERVEROUTPUT ON;
+DECLARE
+	i number;
+BEGIN
+	for i in 1..100 loop
+		dbms_output.put_line(i);
+	end loop;
+END;
+/		
+------------------------------------------------------------------------------------------------
+#WHILE LOOP
+
+SET SERVEROUTPUT ON;
+DECLARE
+	i number:=1;
+BEGIN	
+	while i<=100 loop
+		dbms_output.put_line(i);
+		i:=i+1;
+	end loop;
+END;
+/
+------------------------------------------------------------------------------------------------
+#COMMAND LOOP
+
+SET SERVEROUTPUT ON;
+DECLARE
+	i number:=1;
+BEGIN
+	loop
+		dbms_output.put_line(i);
+		i:=i+1;
+		exit when i>100;
+	end loop;
+END;
+/
+
+============================================================================================================================
+
+5) Write a PL/SQL block which displays gross salary of employees as per user input EID. (Consider EMP table with EID, EName, Deptno, Deptname Gender, 
+     Age, BasicSal) with appropriate data types.) Gross_Salary: BASICSAL + (DA + HRA + Medical) – PF. Rules: HRA = 15% of basic, DA = 50% of basic, 
+    Medical = Rs. 500, PF = 10% of basic.
+
+CREATE TABLE EMP(
+	EID NUMBER(3) Primary Key,
+	EName varchar(50),
+	Deptno number(3),
+	Deptname varchar(50),
+	Gender varchar(10),
+	Age number(3),
+	BasicSal number(5),
+	DA real,
+	HRA real,
+	Medical number(3),
+	PF real,
+	GSal number(5)
+);
+
+SET SERVEROUTPUT ON;
+DECLARE
+	v_EID EMP.EID%TYPE;
+	v_EName EMP.EName%TYPE;
+	v_Deptno EMP.Deptno%TYPE;
+	v_Deptname EMP.Deptname%TYPE;
+	v_Gender EMP.Gender%TYPE;
+	v_Age EMP.Age%TYPE;
+	v_BasicSal EMP.BasicSal%TYPE;
+	v_DA EMP.DA%TYPE;
+	v_HRA EMP.HRA%TYPE;
+	v_Medical EMP.Medical%TYPE;
+	v_PF EMP.PF%TYPE;
+	v_GSal EMP.GSal%TYPE;
+BEGIN
+	v_EID:=&EID;
+	
+	SELECT EName, Deptno, Deptname, Gender, Age, BasicSal 
+	INTO v_EName, v_Deptno, v_Deptname, v_Gender, v_Age, v_BasicSal 
+	FROM EMP WHERE EID=v_EID;
+
+	v_HRA:=v_BasicSal*15/100;
+	v_DA:=v_BasicSal*50/100;
+	v_PF:=v_BasicSal*50/100;
+	v_Medical:=500;
+
+	v_GSal:=v_BasicSal+(v_DA+v_HRA+v_Medical)-v_PF;
+
+
+    	UPDATE EMP
+    	SET DA = v_DA,
+        	HRA = v_HRA,
+        	Medical = v_Medical,
+	PF = v_PF,
+	GSal = v_GSal
+    	WHERE EID = v_EID;
+
+COMMIT;
+
+    	DBMS_OUTPUT.PUT_LINE('===================================');
+
+    	DBMS_OUTPUT.PUT_LINE('ID        : ' || v_EID);
+    	DBMS_OUTPUT.PUT_LINE('Employee Name   : ' || v_Ename);
+    	DBMS_OUTPUT.PUT_LINE('Department Number      : ' || v_Deptno);
+    	DBMS_OUTPUT.PUT_LINE('Department Name      : ' || v_Deptname);
+   	DBMS_OUTPUT.PUT_LINE('Gender      : ' || v_Gender);
+   	DBMS_OUTPUT.PUT_LINE('Age      : ' || v_Age);
+    	DBMS_OUTPUT.PUT_LINE('Basic Salary      : ' || v_BasicSal);
+
+DBMS_OUTPUT.PUT_LINE('-----------------------------------');
+END;
+/	
+
+============================================================================================================================
+
+6) Write a PL/SQL block which accepts measurement in feet and displays it in cm, inch and meter.
+
+SET SERVEROUTPUT ON;
+DECLARE
+	feet number;
+	cm number;
+	inch number;
+	meter number;
+BEGIN
+	feet:=&feet;
+
+	inch:= feet *12;
+	cm:= feet*30.48;
+	meter:= feet*0.3048;
+
+	DBMS_OUTPUT.PUT_LINE('Measurement IN Feet :' || feet);
+	DBMS_OUTPUT.PUT_LINE('Measurement IN INCH:' || inch);
+	DBMS_OUTPUT.PUT_LINE('Measurement IN CM :' || cm);
+	DBMS_OUTPUT.PUT_LINE('Measurement IN METER :' || meter);
+END;
+/
+
+============================================================================================================================
+
+7) Write a PL/SQL block which converts temperature from Celsius to Fahrenheit.
+
+
+SET SERVEROUTPUT ON;
+DECLARE
+	cel number:=&cel;
+	feh number;
+BEGIN
+	feh:=(cel*9/5)+32;
+
+	DBMS_OUTPUT.PUT_LINE('Your Celsius Number : ' ||cel);
+	DBMS_OUTPUT.PUT_LINE('Convert Celsius To Fahrenheit : '||feh);
+END;
+/
+
+============================================================================================================================
+
+8) Write a PL/SQL block to delete the record of employee for given EID.
+
+Create Table Employe(
+	EID number primary key,
+	Ename varchar(50),
+	Sal number(10)
+);
+
+SET SERVEROUTPUT ON;
+DECLARE
+	v_EID Employe.EID%TYPE;
+	v_Ename Employe.Ename%TYPE;
+	v_Sal Employe.Sal%TYPE;
+
+BEGIN
+	v_EID:=&EID;
+	
+	DELETE FROM Employe where EID=v_EID;
+
+END;
+/
+
+============================================================================================================================
+
+9) Write a PL/SQL block that calculates the simple interest based on given principal amount, rate of interest and number of years.
+
+SET SERVEROUTPUT ON;
+DECLARE
+	principal number:=&principal;
+	rate number:=&rate;
+	year number:=&year;
+	interest number;
+BEGIN
+	interest:=(principal*rate*year)/100;
+
+	DBMS_OUTPUT.PUT_LINE('Simple Intreset : '||interest);
+END;
+/
+
+============================================================================================================================
+
+10) Write a PL/SQL block to calculate the square and cube of the given number.
+
+SET SERVEROUTPUT ON;
+DECLARE
+	num number:=&num;
+	square number;
+	cube number;
+BEGIN
+	square:=num*num;
+	cube:=num*num*num;
+
+	DBMS_OUTPUT.PUT_LINE('Square Of Give Number Is : ' ||square);
+	DBMS_OUTPUT.PUT_LINE('CUBE Of Give Number Is : '||cube);
+END;
+/
+
+============================================================================================================================

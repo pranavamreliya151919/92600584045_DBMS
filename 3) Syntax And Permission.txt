@@ -1,0 +1,37 @@
+Calculate Percentage of 5 Subject Marks Taken as A User Input
+
+set serveroutput on;
+DECLARE
+	dbms number(3);
+	ai number(3);
+	python number(3);
+	maths number(3);
+	english number(3); 
+	marks number(3);
+	percentage real(10);
+BEGIN
+	dbms:=&DBMS;
+	ai:=&AI;
+	python:=&PYTHON;
+	maths:=&MATHS;
+	english:=&ENGLISH;
+	marks:=(dbms+ai+python+maths+english);
+	percentage:=marks/5;
+	dbms_output.put_line(marks);
+	dbms_output.put_line(percentage);
+END;
+/
+
+=================================================================================================================
+
+1) edit D:/PLSQL/test.sql			edit	-	edit file
+-> Edit the file from Notepad Editor.
+
+2) start D:/PLSQL/test.sql			start	-	only ouput
+-> To View The Output Only.
+
+3) @D:/PLSQL/test.sql			@	-	only output
+-> To View The Output Only.
+
+4) run D:/PLSQL/test.sql			run	-	code & output
+-> To View The Code and Output Both.

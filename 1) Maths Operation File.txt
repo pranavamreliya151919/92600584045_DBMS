@@ -1,0 +1,82 @@
+// 1) PRINT HELLO 
+set serveroutput on;
+begin
+	dbms_output.put_line('Hello');
+end;
+
+=============================================================================================================================
+
+// 2) MATH OPERATIONS
+set serveroutput on;
+DECLARE
+	a integer := 10;
+	b integer := 20;
+	c integer;
+	f real;
+
+begin
+	c:= a+b;
+	dbms_output.put_line('Value Of A+B:'||c);
+	f:=100.0/3.0;
+	dbms_output.put_line('Value Of F:'||f);
+
+END;
+/
+
+=============================================================================================================================
+
+// 3) Take Input Form A User
+set serveroutput on;
+DECLARE
+	a integer;
+begin
+	a:=&a;
+	dbms_output.put_line('Value of A :' ||a);
+END;
+/
+
+=============================================================================================================================
+
+// 4) SCOPE OF VARIABLE
+set serveroutput on;
+DECLARE
+	num1 number := 95;
+	num2 number := 5;
+begin
+	dbms_output.put_line('Outer Variable Number' ||num1);
+	dbms_output.put_line('Outer Variable Number' ||num2);
+	DECLARE
+		num1 number := 195;
+		num2 number := 15;
+	begin
+		dbms_output.put_line('inner Variable Number' ||num1);
+		dbms_output.put_line('inner Variable Number' ||num2);
+	END;
+END;
+/
+
+============================================================================================================================
+
+// 5) CALCULATE SALARY
+set serveroutput on;
+DECLARE
+	basic number(10);
+	ta number(10);
+	da number(10);
+	hr number(10);
+	deduction number(10);
+	gross number(10);
+begin 
+	basic:= &basic;
+	ta:= &ta;
+	da:= &da;
+	hr:= &hr;
+	deduction:= &deduction;
+	gross:=(basic+ta+da+hr-deduction);
+	dbms_output.put_line('Gross Salary :'||gross);
+END;
+/
+
+============================================================================================================================
+
+// 6) 
