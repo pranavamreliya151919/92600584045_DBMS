@@ -1,0 +1,83 @@
+1.      IT Helpdesk Escalation: An organization's IT department receives support tickets with priority values from 1 to 5. Write a PL/SQL block that repeatedly processes ticket           priorities. If priority is 1, display "Critical – Escalate Immediately" and use a GOTO statement to transfer control to an escalation section. For priority 2–3 display                          "High/Medium Priority", and for 4–5 display "Normal Priority". Evaluate whether GOTO provides a useful solution in this situation.
+
+------------------------------------------CODE-------------------------------------------------------
+
+set serveroutput on;
+declare
+	priority number:=&priority;
+begin
+	for priority in 1..5 loop
+		if priority = 1 then
+			DBMS_OUTPUT.PUT_LINE('Critical – Escalate Immediately');
+			GOTO escalation;
+		elsif priority between 2 and 3 then
+			DBMS_OUTPUT.PUT_LINE('High/Medium Priority');	
+		elsif priority between 4 and 5 then
+			DBMS_OUTPUT.PUT_LINE('Normal Priority');
+		else
+			DBMS_OUTPUT.PUT_LINE('Invalid Choice!, Please Choose 1 to 5');
+		end if;
+ 	end loop;
+
+	<<escalation>>
+	DBMS_OUTPUT.PUT_LINE('Ticket transferred to Escalation Section.');
+END;
+/
+
+==============================================================================
+
+
+2. Bank Loan Approval: The Finance Department processes employee loan applications. Write a PL/SQL block that accepts salary, years of service and requested loan amount. Approve the loan only when salary is at least ₹40,000, service is at least 3 years, and the requested amount is not more than 5 times the salary. Otherwise reject the application. Display suitable approval/rejection messages.
+
+------------------------------------------CODE-------------------------------------------------------
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+	salary NUMBER :=&salary;
+	year NUMBER :=&year;
+	loan NUMBER :=&loan;
+BEGIN
+	if salary>=40000 
+	  and year>=3 
+	  and loan<=(salary*5) then
+		DBMS_OUTPUT.PUT_LINE('LOAN APPROVED');
+		DBMS_OUTPUT.PUT_LINE('CONGRATSSS!, YOU ARE ELIGIBLE FOR LOAN');
+	ELSE
+		DBMS_OUTPUT.PUT_LINE('LOAN REJECT');
+	END IF;
+END;
+/
+
+==============================================================================
+
+3. Employee Salary Evaluation: An organization wants to automatically evaluate an employee's salary. Write a PL/SQL block that accepts an employee's basic salary and calculates HRA (20%) and DA (10%). If the basic salary is greater than ₹50,000, provide an additional 5% special allowance. Display the basic salary, allowances and gross salary.
+
+------------------------------------------CODE-------------------------------------------------------
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+	B_SAL NUMBER := &B_SAL;
+	HRA NUMBER;
+	DA NUMBER;
+	BONUS NUMBER:=0;
+	G_SAL NUMBER;
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('BASIC SALARY' || B_SAL);
+	IF B_SAL >= 50000 THEN
+		BONUS:=(B_SAL*5)/100;
+	END IF;
+
+	HRA:=(B_SAL*20)/100;
+	DA:=(B_SAL*10)/100;
+	G_SAL:=B_SAL+BONUS+HRA+DA;
+
+	DBMS_OUTPUT.PUT_LINE('BASIC SALARY : ' || B_SAL);
+	DBMS_OUTPUT.PUT_LINE('HRA : ' || HRA);
+	DBMS_OUTPUT.PUT_LINE('DA : ' || DA);
+	DBMS_OUTPUT.PUT_LINE('SPECIAL ALLOWANCE : ' || BONUS);
+	DBMS_OUTPUT.PUT_LINE('GROSS SALARY : ' || G_SAL);
+	
+END;
+/
