@@ -1,3 +1,19 @@
+=================================================================================================================
+
+1) edit D:/PLSQL/test.sql			edit	-	edit file
+-> Edit the file from Notepad Editor.
+
+2) start D:/PLSQL/test.sql			start	-	only ouput
+-> To View The Output Only.
+
+3) @D:/PLSQL/test.sql			@	-	only output
+-> To View The Output Only.
+
+4) run D:/PLSQL/test.sql			run	-	code & output
+-> To View The Code and Output Both.
+
+=================================================================================================================
+
 Calculate Percentage of 5 Subject Marks Taken as A User Input
 
 set serveroutput on;
@@ -21,17 +37,3 @@ BEGIN
 	dbms_output.put_line(percentage);
 END;
 /
-
-=================================================================================================================
-
-1) edit D:/PLSQL/test.sql			edit	-	edit file
--> Edit the file from Notepad Editor.
-
-2) start D:/PLSQL/test.sql			start	-	only ouput
--> To View The Output Only.
-
-3) @D:/PLSQL/test.sql			@	-	only output
--> To View The Output Only.
-
-4) run D:/PLSQL/test.sql			run	-	code & output
--> To View The Code and Output Both.
