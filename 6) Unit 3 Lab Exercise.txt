@@ -1,0 +1,178 @@
+Lab Exercise Unit 3:
+
+11. Create a trigger that stores deleted employee records in EMP_HISTORY along with:
+ Deleted By
+ Deleted Date
+ Deleted Time
+
+-----------------------------------------CODE-------------------------------------------------------
+
+CREATE TABLE EMP (
+    EMP_ID NUMBER,
+    EMP_NAME VARCHAR2(50),
+    SALARY NUMBER,
+    DEPT VARCHAR2(30)
+);
+
+CREATE TABLE EMP_HISTORY (
+    EMP_ID NUMBER,
+    EMP_NAME VARCHAR2(50),
+    SALARY NUMBER,
+    DEPT VARCHAR2(30),
+    DELETED_BY VARCHAR2(50),
+    DELETED_DATE DATE,
+    DELETED_TIME VARCHAR2(20)
+);
+
+INSERT INTO EMP VALUES (1, 'Pranav', 30000, 'IT');
+INSERT INTO EMP VALUES (2, 'Darshit', 35000, 'HR');
+INSERT INTO EMP VALUES (3, 'Ronak', 40000, 'Sales');
+
+CREATE OR REPLACE TRIGGER emp_delete_trigger
+BEFORE DELETE ON EMP
+FOR EACH ROW
+BEGIN
+    INSERT INTO EMP_HISTORY
+    VALUES (
+        :OLD.EMP_ID,
+        :OLD.EMP_NAME,
+        :OLD.SALARY,
+        :OLD.DEPT,
+        USER,
+        SYSDATE,
+        TO_CHAR(SYSDATE, 'HH24:MI:SS')
+    );
+END;
+/
+
+DELETE FROM EMP
+WHERE EMP_ID = 1;
+
+SELECT * FROM EMP_HISTORY;
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+12. Create a BEFORE INSERT trigger that prevents insertion of students having age less than 18.
+
+-----------------------------------------CODE-------------------------------------------------------
+
+CREATE TABLE STUDENT (
+    STUDENT_ID NUMBER,
+    STUDENT_NAME VARCHAR2(50),
+    AGE NUMBER
+);
+
+CREATE OR REPLACE TRIGGER check_student_age
+BEFORE INSERT ON STUDENT
+FOR EACH ROW
+BEGIN
+    IF :NEW.AGE < 18 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Student age must be 18 or more');
+    END IF;
+END;
+/
+
+INSERT INTO STUDENT VALUES (1, 'Pranav', 20);
+INSERT INTO STUDENT VALUES (2, 'Darshit', 16);
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+13. Create an AFTER UPDATE trigger that records old salary and new salary into SALARY_LOG table whenever salary is modified.
+
+-----------------------------------------CODE-------------------------------------------------------
+
+CREATE TABLE EMPLOYEE (
+    EMP_ID NUMBER,
+    EMP_NAME VARCHAR2(50),
+    SALARY NUMBER
+);
+
+CREATE TABLE SALARY_LOG (
+    EMP_ID NUMBER,
+    OLD_SALARY NUMBER,
+    NEW_SALARY NUMBER,
+    CHANGE_DATE DATE
+);
+
+INSERT INTO EMPLOYEE VALUES (1, 'Pranav', 30000);
+
+CREATE OR REPLACE TRIGGER salary_update_trigger
+AFTER UPDATE OF SALARY ON EMPLOYEE
+FOR EACH ROW
+BEGIN
+    INSERT INTO SALARY_LOG
+    VALUES (
+        :OLD.EMP_ID,
+        :OLD.SALARY,
+        :NEW.SALARY,
+        SYSDATE
+    );
+END;
+/
+
+UPDATE EMPLOYEE SET SALARY = 40000
+WHERE EMP_ID = 1;
+
+SELECT * FROM SALARY_LOG;
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+14. Create a trigger that automatically sets joining date to SYSDATE if no joining date is provided during insertion.
+
+-----------------------------------------CODE-------------------------------------------------------
+
+CREATE TABLE EMP_JOIN (
+    EMP_ID NUMBER,
+    EMP_NAME VARCHAR2(50),
+    JOINING_DATE DATE
+);
+
+CREATE OR REPLACE TRIGGER set_joining_date
+BEFORE INSERT ON EMP_JOIN
+FOR EACH ROW
+BEGIN
+    IF :NEW.JOINING_DATE IS NULL THEN
+        :NEW.JOINING_DATE := SYSDATE;
+    END IF;
+END;
+/
+
+INSERT INTO EMP_JOIN (EMP_ID, EMP_NAME) VALUES (1, 'Pranav');
+SELECT * FROM EMP_JOIN;
+
+INSERT INTO EMP_JOIN VALUES (2, 'Darshit', DATE '2026-09-10');
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+15. Create a trigger that prevents deleting employees belonging to HR department.
+
+-----------------------------------------CODE-------------------------------------------------------
+
+CREATE TABLE EMP_DEPT (
+    EMP_ID NUMBER,
+    EMP_NAME VARCHAR2(50),
+    DEPT VARCHAR2(30),
+    SALARY NUMBER
+);
+
+INSERT INTO EMP_DEPT
+VALUES (1, 'Pranav', 'IT', 30000);
+
+INSERT INTO EMP_DEPT
+VALUES (2, 'Darshit', 'HR', 35000);
+
+COMMIT;
+
+CREATE OR REPLACE TRIGGER prevent_hr_delete
+BEFORE DELETE ON EMP_DEPT
+FOR EACH ROW
+BEGIN
+    IF :OLD.DEPT = 'HR' THEN
+        RAISE_APPLICATION_ERROR(-20002,
+        'Cannot delete HR department employee');
+    END IF;
+END;
+/
+
+DELETE FROM EMP_DEPT WHERE EMP_ID = 1;
+DELETE FROM EMP_DEPT WHERE EMP_ID = 2;
